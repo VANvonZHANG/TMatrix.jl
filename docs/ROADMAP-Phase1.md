@@ -235,23 +235,37 @@ The final deliverable of Phase 1. Assembles complete VSWFs from Layer 0 + Layer 
 
 VSWFs are constructed by combining the vector spherical harmonics (P, B, C) with radial functions (spherical Bessel or Hankel):
 
-**Regular (incident/internal field) VSWFs — use j_n(kr):**
+The complete VSWF definitions have three components in spherical coordinates (r̂, θ̂, φ̂). We use the shorthand ρ = kr and z_n for the radial function (j_n for regular, h_n^{(1)} for outgoing).
 
-- **RgM_{mn}(kr,θ,φ)** = γ_{mn} · j_n(kr) · C_{mn}(θ,φ) — regular magnetic multipole (TE)
-- **RgN_{mn}(kr,θ,φ)** — regular electric multipole (TM); radial part involves `[kr·j_n(kr)]'/(kr)` combined with B_{mn}
-- **RgL_{mn}(kr,θ,φ)** — longitudinal component; uses γ'_{mn} and P_{mn}
+**M_{mn} — magnetic multipole (TE), has no radial component:**
 
-**Outgoing (scattered field) VSWFs — use h_n^{(1)}(kr):**
+M_{mn}(ρ,θ,φ) = γ_{mn} · z_n(ρ) · C_{mn}(θ,φ)
 
-- **M_{mn}(kr,θ,φ)** = γ_{mn} · h_n^{(1)}(kr) · C_{mn}(θ,φ) — outgoing magnetic multipole
-- **N_{mn}(kr,θ,φ)** — outgoing electric multipole; radial part involves `[kr·h_n^{(1)}(kr)]'/(kr)` combined with B_{mn}
-- **L_{mn}(kr,θ,φ)** — longitudinal component
+Expanded: M_{mn} = γ_{mn} z_n(ρ) [θ̂ im/sinθ · P_n^m(cosθ) - φ̂ dP_n^m/dθ] exp(imφ)
+
+**N_{mn} — electric multipole (TM), has all three components:**
+
+N_{mn}(ρ,θ,φ) = γ_{mn} · { r̂ n(n+1)/ρ · z_n(ρ) · P_{mn}(θ,φ) + [ρ z_n(ρ)]'/ρ · B_{mn}(θ,φ) }
+
+Where the derivative term expands as: [ρ z_n(ρ)]' = z_{n-1}(ρ) - (n+1)/ρ · z_n(ρ) (from the recurrence relation).
+
+So the three components are:
+- r̂: γ_{mn} · n(n+1)/ρ · z_n(ρ) · P_n^m(cosθ) exp(imφ)
+- θ̂: γ_{mn} · [ρ z_n(ρ)]'/ρ · dP_n^m/dθ · exp(imφ)
+- φ̂: γ_{mn} · [ρ z_n(ρ)]'/ρ · im/sinθ · P_n^m(cosθ) · exp(imφ)
+
+**L_{mn} — longitudinal component (for plane wave expansion):**
+
+L_{mn}(ρ,θ,φ) = γ'_{mn} · [z_n(ρ)/ρ + z'_n(ρ)] · P_{mn}(θ,φ) + γ'_{mn} · n(n+1)/ρ · z_n(ρ) · ...
+
+Uses γ'_{mn} normalization instead of γ_{mn}.
+
+**Regular vs. outgoing:** Replace z_n = j_n(kr) for regular ("Rg") VSWFs, or z_n = h_n^{(1)}(kr) for outgoing VSWFs. The "Rg" prefix is standard Mishchenko notation.
 
 **Dependencies:** Layer 0.1 (Bessel/Hankel) + Layer 1.2 (P/B/C vector harmonics)
 
 **Implementation notes:**
-- The radial part of N involves the derivative of `[ρ·z_n(ρ)]` where ρ = kr and z_n is j_n or h_n^{(1)}. This can be computed via the recurrence `d/dρ[ρ·z_n(ρ)] = ρ·z_{n-1}(ρ) - n·z_n(ρ)` or equivalent, avoiding numerical differentiation.
-- The "Rg" (regular) prefix denotes using j_n; absence of "Rg" denotes using h_n^{(1)}. This is the standard notation from Mishchenko's convention.
+- The key radial derivative `[ρ z_n(ρ)]'/ρ` must be computed via recurrence, not numerical differentiation. Using `z_{n-1}(ρ) - (n+1)/ρ · z_n(ρ)` avoids catastrophic cancellation for large n or small ρ.
 
 **Validation:**
 
