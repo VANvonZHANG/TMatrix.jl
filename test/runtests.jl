@@ -1,14 +1,14 @@
 using TMatrix
 using Test
-using Aqua
+using SpecialFunctions: sphericalbesselj, sphericalbessely
+using LegendrePolynomials: Plm, Pl
+using StaticArrays
+using WignerSymbols: wigner3j
+using FastGaussQuadrature: gausslegendre
 
-@testset "Code quality (Aqua.jl)" begin
-    Aqua.test_all(TMatrix)
-end
-
-@testset "TMatrix.jl" begin
-    # include("test_special_functions.jl")
-    # include("test_vswf.jl")
-    # include("test_mie.jl")
-    @test true
+@testset "TMatrix.jl Phase 1" begin
+    include("test_special_functions.jl")
+    include("test_composed.jl")
+    include("test_vswf.jl")
+    include("test_geometry.jl")
 end
