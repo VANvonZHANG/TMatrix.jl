@@ -113,13 +113,14 @@ Derivatives:
 - `ζ_n'(x) = j_n(x) + x · j_n'(x)`
 - `ξ_n'(x) = h_n^(1)(x) + x · h_n^(1)'(x)`
 
-Lorenz-Mie coefficients:
+Lorenz-Mie coefficients (Bohren & Huffman / Sun Eq. 3.3.41):
 ```
-b_n = [ζ_n(mx)·ζ_n'(x) - m·ζ_n(x)·ζ_n'(mx)] / [ξ_n(mx)·ζ_n'(x) - m·ζ_n(x)·ξ_n'(mx)]
-a_n = [m·ζ_n(mx)·ζ_n'(x) - ζ_n(x)·ζ_n'(mx)] / [m·ξ_n(mx)·ζ_n'(x) - ζ_n(x)·ξ_n'(mx)]
+b_n = [ζ_n(mx)·ζ_n'(x) - m·ζ_n(x)·ζ_n'(mx)] / [ζ_n(mx)·ξ_n'(x) - m·ξ_n(x)·ζ_n'(mx)]
+a_n = [m·ζ_n(mx)·ζ_n'(x) - ζ_n(x)·ζ_n'(mx)] / [m·ζ_n(mx)·ξ_n'(x) - ξ_n(x)·ζ_n'(mx)]
 ```
 """
 function mie_ab(N_max::Int, x::Real, m::Complex)
+    N_max >= 1 || throw(ArgumentError("N_max must be >= 1, got $N_max"))
     T = promote_type(typeof(float(x)), typeof(m))
     a = Vector{T}(undef, N_max)
     b = Vector{T}(undef, N_max)

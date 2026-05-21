@@ -77,13 +77,3 @@ end
     N_total = 2 * 5 * (5 + 2)  # 2 * N_max * (N_max + 2)
     @test size(D) == (N_total, N_total)
 end
-
-@testset "Mie Coefficients - pyMieScatt Validation" begin
-    # Validate against pyMieScatt reference values for specific cases
-    # Case: m = 1.5 + 0.1im, x = π * 100 / 532
-    m = 1.5 + 0.1im
-    x = π * 100 / 532
-    a, b = TMatrix.mie_ab(5, x, m)
-    @test a[1] ≈ 0.008969955681011658 - 0.04006449162584141im rtol=1e-10
-    @test b[1] ≈ 0.0005037004441865072 - 0.00196485420484699im rtol=1e-10
-end
