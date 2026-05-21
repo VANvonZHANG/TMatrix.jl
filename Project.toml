@@ -3,6 +3,8 @@ uuid = "a6f17f15-b988-4306-9f5a-e24ae044faea"
 version = "0.1.0"
 
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 FastGaussQuadrature = "442a2c76-b920-505d-bb47-c5924d526838"
 LegendrePolynomials = "3db4a2ba-fc88-11e8-3e01-49c72059a882"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
