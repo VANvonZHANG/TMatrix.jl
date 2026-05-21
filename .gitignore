@@ -5,3 +5,5 @@
 /docs/Manifest*.toml
 /docs/build/
 /docs/superpowers/
+# Validation outputs (generated, not committed)
+validation/mie/outputs/
