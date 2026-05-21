@@ -56,15 +56,13 @@ function mie_ab(N_max::Int, x::Real, m::Complex)
         zeta_x  = x  * sphericalbesselj(n, x)
         zeta_mx = mx * sphericalbesselj(n, mx)
 
-        # Riccati-Bessel functions of third kind (ξ)
-        xi_x  = x  * shankelh1(n, x)
+        # Riccati-Bessel functions of third kind (ξ) — inside particle only
         xi_mx = mx * shankelh1(n, mx)
 
         # Derivatives of Riccati-Bessel functions
         zeta_prime_x  = sphericalbesselj(n, x)  + x  * sbesselj_deriv(n, x)
         zeta_prime_mx = sphericalbesselj(n, mx) + mx * sbesselj_deriv(n, mx)
 
-        xi_prime_x  = shankelh1(n, x)  + x  * shankelh1_deriv(n, x)
         xi_prime_mx = shankelh1(n, mx) + mx * shankelh1_deriv(n, mx)
 
         # Sun Eq. 3.3.41 — b_n
