@@ -23,6 +23,11 @@ function shankelh1_deriv(n::Int, x)
     return shankelh1(n - 1, x) - (n + 1) / x * shankelh1(n, x)
 end
 
+function shankelh2_deriv(n::Int, x)
+    n == 0 && return -shankelh2(1, x)
+    return shankelh2(n - 1, x) - (n + 1) / x * shankelh2(n, x)
+end
+
 # Riccati-Bessel derivative: [ρ z_n(ρ)]'/ρ = z_{n-1}(ρ) - n/ρ z_n(ρ)
 # Used in N_{mn} construction (Sun Eq. 3.2.46)
 riccati_zn_prime(zn_prev, zn, n, rho) = zn_prev - n / rho * zn
