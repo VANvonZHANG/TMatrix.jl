@@ -1,5 +1,7 @@
 # Layer 0.5: Lorenz-Mie Coefficients (Sun §3.3, Eq. 3.3.41)
 
+using LinearAlgebra: Diagonal
+
 # ---- Solver dispatch tag ----------------------------------------------------
 
 """
@@ -129,24 +131,26 @@ function mie_ab(N_max::Int, x::Real, m::Complex)
         zeta_x  = x  * sphericalbesselj(n, x)
         zeta_mx = mx * sphericalbesselj(n, mx)
 
-        # Riccati-Bessel functions of third kind (ξ) — inside particle only
+        # Riccati-Bessel functions of third kind (ξ)
         # Sun Eq. 3.3.40a: ξ_n(x) = x·h_n^(1)(x)
+        xi_x  = x  * shankelh1(n, x)
         xi_mx = mx * shankelh1(n, mx)
 
         # Derivatives of Riccati-Bessel functions
         zeta_prime_x  = sphericalbesselj(n, x)  + x  * sbesselj_deriv(n, x)
         zeta_prime_mx = sphericalbesselj(n, mx) + mx * sbesselj_deriv(n, mx)
 
+        xi_prime_x  = shankelh1(n, x)  + x  * shankelh1_deriv(n, x)
         xi_prime_mx = shankelh1(n, mx) + mx * shankelh1_deriv(n, mx)
 
         # Sun Eq. 3.3.41 — b_n
         num_b = zeta_mx * zeta_prime_x - m * zeta_x * zeta_prime_mx
-        den_b = xi_mx  * zeta_prime_x - m * zeta_x * xi_prime_mx
+        den_b = zeta_mx * xi_prime_x - m * xi_x * zeta_prime_mx
         b[n] = num_b / den_b
 
         # Sun Eq. 3.3.41 — a_n
         num_a = m * zeta_mx * zeta_prime_x - zeta_x * zeta_prime_mx
-        den_a = m * xi_mx  * zeta_prime_x - zeta_x * xi_prime_mx
+        den_a = m * zeta_mx * xi_prime_x - xi_x * zeta_prime_mx
         a[n] = num_a / den_a
 
         if !isfinite(a[n]) || !isfinite(b[n])
@@ -200,6 +204,26 @@ function solve_tmatrix(
     x = k * sphere.radius
     a, b = mie_ab(N_max, x, refractive_index)
     return MieTMatrix(a, b, k, sphere.radius, N_max)
+end
+
+# ---- Conversion to built-in Diagonal matrix ---------------------------------
+
+"""
+    Diagonal(T::MieTMatrix)
+
+Convert a [`MieTMatrix`](@ref) to Julia's built-in `LinearAlgebra.Diagonal` matrix.
+
+Total dimension: `2 * N_max * (N_max + 2)`.
+The diagonal stores `-b_n` (T^11 block) followed by `-a_n` (T^22 block)
+for each `n`, with each coefficient repeated `2n+1` times (for `m = -n..n`).
+"""
+function Diagonal(T::MieTMatrix)
+    flat = ComplexF64[]
+    for n in 1:T.N_max
+        append!(flat, fill(-T.b[n], 2n + 1))   # T^11 for m = -n..n
+        append!(flat, fill(-T.a[n], 2n + 1))   # T^22 for m = -n..n
+    end
+    return Diagonal(flat)
 end
 
 # ---- Post-processing: cross-sections ----------------------------------------
