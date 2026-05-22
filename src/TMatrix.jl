@@ -17,6 +17,9 @@ include("composed.jl")
 include("vswf.jl")
 include("geometry.jl")
 
+# Layer 2+: Mie Solver
+include("mie.jl")
+
 # Layer 0 exports
 export shankelh1, shankelh2, sbesselj_deriv, sbessely_deriv, shankelh1_deriv
 export dplmdtheta, plm_over_sintheta, gl_theta, gl_phi
@@ -29,5 +32,10 @@ export P_vsh, B_vsh, C_vsh
 export vswf_M, vswf_N, vswf_L
 export Sphere, Spheroid, ChebyshevParticle
 export surface_radius, surface_dradius_dtheta, surface_element, surface_normal
+
+# Layer 2+ exports
+export MieMethod, MieTMatrix, CrossSections
+export mie_ab, mie_nmax, mie_nmax_conservative
+export solve_tmatrix, calc_cross_sections
 
 end

@@ -12,3 +12,7 @@ using FastGaussQuadrature: gausslegendre
     include("test_vswf.jl")
     include("test_geometry.jl")
 end
+
+@testset "TMatrix.jl Phase 2 - Mie Solver" begin
+    include("test_mie.jl")
+end

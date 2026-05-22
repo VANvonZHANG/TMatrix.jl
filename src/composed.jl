@@ -25,7 +25,7 @@ end
 function gamma_vsh(n::Int, m::Int)
     n == 0 && return oftype(1.0, Inf)
     return sqrt((2n + 1) / (4pi * n * (n + 1)) *
-        exp(loggamma(n - m + 1) - loggamma(n + m + 1)))
+                exp(loggamma(n - m + 1) - loggamma(n + m + 1)))
 end
 
 # Scalar harmonic Y_{mn}(θ,φ) = P_n^m(cosθ) exp(imφ) (Sun Eq. 3.2.40)

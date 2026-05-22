@@ -1,0 +1,5 @@
+name,m_real,m_imag,wavelength_nm,diameter_nm
+"typical_aerosol",1.5,0.01,532,100
+"water_droplet",1.33,0.0,650,500
+"soot",2.0,1.0,1000,200
+"high_absorption",1.5,0.5,800,1000

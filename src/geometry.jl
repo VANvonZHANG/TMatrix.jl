@@ -82,7 +82,7 @@ function _chebyshev_T_deriv(n::Int, x::Real)
     n == 1 && return one(x)
     # dT_n/dx = n U_{n-1}(x), U = Chebyshev of second kind
     U_prev2, U_prev1 = one(x), 2x
-    for _ in 2:(n-1)
+    for _ in 2:(n - 1)
         U_prev2, U_prev1 = U_prev1, 2x * U_prev1 - U_prev2
     end
     return n * U_prev1
