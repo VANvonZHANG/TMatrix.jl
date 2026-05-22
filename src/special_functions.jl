@@ -131,7 +131,7 @@ dP/dθ = n cosθ/sinθ · P_n^m(cosθ) - (n+m)/sinθ · P_{n-1}^m(cosθ)
 ```
 
 Handles the removable singularity at ``\\theta = 0`` and ``\\theta = \\pi`` via
-limiting values.
+a finite-difference approximation.
 
 # Arguments
 - `n::Int`: Degree
@@ -166,7 +166,7 @@ Associated Legendre polynomial divided by ``\\sin\\theta``:
 This ratio appears in the vector spherical harmonics ``B_{mn}`` and ``C_{mn}``.
 For ``m = 0``, the function is genuinely singular and returns `Inf`.
 For ``m \\geq 2``, the limit is zero.
-For ``m = 1``, uses the known limiting value ``-n(n+1)/2``.
+For ``m = 1``, the limit is ``-n(n+1)/2`` at ``\\theta = 0`` and ``(-1)^n n(n+1)/2`` at ``\\theta = \\pi``.
 
 # Arguments
 - `n::Int`: Degree

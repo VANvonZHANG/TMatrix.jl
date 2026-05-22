@@ -47,7 +47,7 @@ Vector spherical wave function ``N_{mn}(\\rho, \\theta, \\phi)`` — electric mu
 
 ```
 N_{mn} = \\gamma_{mn} \\{ \\hat{r} \\frac{n(n+1)}{\\rho} z_n(\\rho) P_{mn}(\\theta, \\phi)
-         + B_{mn}(\\theta, \\phi) \\cdot \\frac{[\\rho z_n(\\rho)]'}{\\rho} \\}
+         + B_{mn}(\\theta, \\phi) \\frac{[\\rho z_n(\\rho)]'}{\\rho} \\}
 ```
 
 Has all three spherical components. `regular=true` uses ``j_n(kr)``;
@@ -91,6 +91,11 @@ Used for plane wave expansion. Uses ``\\gamma'_{mn}`` normalization instead of `
 L_{mn} = \\frac{1}{k} \\nabla [z_n(kr) Y_{mn}(\\theta, \\phi)]
 ```
 
+In spherical components (Sun Eq. 3.2.50):
+```
+L_{mn} = \\gamma'_{mn} \\{ \\hat{r} z_n'(\\rho) P_n^m e^{im\\phi} + B_{mn} \\frac{z_n(\\rho)}{\\rho} \\}
+```
+
 # Arguments
 - `n::Int`: Multipole order (must be ≥ 1)
 - `m::Int`: Azimuthal mode number
@@ -109,11 +114,7 @@ function vswf_L(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool 
     n >= 1 || throw(ArgumentError("vswf_L requires n >= 1, got n=$n"))
     gp = gamma_prime(n, m)
     zn = _radial_func(n, kr; regular)
-    if n == 0
-        zn_deriv = regular ? sbesselj_deriv(0, kr) : shankelh1_deriv(0, kr)
-    else
-        zn_deriv = regular ? sbesselj_deriv(n, kr) : shankelh1_deriv(n, kr)
-    end
+    zn_deriv = regular ? sbesselj_deriv(n, kr) : shankelh1_deriv(n, kr)
     # Radial: γ'_{mn} z_n'(kr) P_n^m exp(imφ)
     r_comp = gp * zn_deriv * Plm(cos(theta), n, m) * exp(im * m * phi)
     # Tangential: γ'_{mn} z_n(kr)/(kr) B_{mn}(θ,φ)

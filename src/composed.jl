@@ -163,6 +163,7 @@ C_{mn} = [\\hat{\\theta} \\frac{im}{\\sin\\theta} P_n^m - \\hat{\\phi} \\frac{dP
 ```
 
 Related to ``B_{mn}`` via ``C_{mn} = B_{mn} \\times \\hat{r}``.
+(Some texts define ``C_{mn} = \\hat{r} \\times B_{mn}``, which differs by a sign.)
 
 # Arguments
 - `n::Int`: Degree
