@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Comprehensive Documenter.jl documentation site with tutorials, API reference, theory guides, and developer docs
+- Docstrings for all public functions across special_functions.jl, composed.jl, vswf.jl, and geometry.jl
+
 ## [0.1.0] - 2026-05-20
 
 ### Added
