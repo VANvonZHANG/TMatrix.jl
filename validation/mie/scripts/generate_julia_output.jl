@@ -1,22 +1,22 @@
 """Generate TMatrix.jl output from input CSV.
 
 Usage:
-    julia --project=../.. generate_julia_output.jl
+    julia --project=../.. generate_julia_output.jl [input_csv] [output_csv]
 
-Reads:  ../inputs/test_cases.csv
-Writes: ../outputs/julia_results.csv
+Defaults:
+    input:  ../inputs/test_cases.csv
+    output: ../outputs/julia_results.csv
 """
 
 using CSV
 using DataFrames
 using TMatrix
 
-# Paths
-base_dir = dirname(dirname(@__FILE__))
-input_csv = joinpath(base_dir, "inputs", "test_cases.csv")
-output_csv = joinpath(base_dir, "outputs", "julia_results.csv")
+function main(args::Vector{String}=ARGS)
+    base_dir = dirname(dirname(@__FILE__))
+    input_csv = length(args) >= 1 ? args[1] : joinpath(base_dir, "inputs", "test_cases.csv")
+    output_csv = length(args) >= 2 ? args[2] : joinpath(base_dir, "outputs", "julia_results.csv")
 
-function main()
     if !isfile(input_csv)
         error("Input file not found: $input_csv")
     end
@@ -48,7 +48,6 @@ function main()
         T = solve_tmatrix(Sphere(r), MieMethod(), λ, m)
         C = calc_cross_sections(T)
 
-        # Convert cross-sections to nm² for comparison
         push!(results, (
             name,
             row.m_real,
@@ -66,10 +65,7 @@ function main()
     end
 
     CSV.write(output_csv, results)
-    println("TMatrix.jl results written to $output_csv")
-    for row in eachrow(results)
-        println("  $(row.name): Qext=$(round(row.Qext, digits=6)), Qsca=$(round(row.Qsca, digits=6)), g=$(round(row.g, digits=6))")
-    end
+    println("TMatrix.jl results written to $output_csv ($(nrow(results)) cases)")
 end
 
 main()
