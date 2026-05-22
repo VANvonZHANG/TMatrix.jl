@@ -7,8 +7,32 @@ function _radial_func(n::Int, rho::Real; regular::Bool = true)
     return shankelh1(n, rho)
 end
 
-# M_{mn}(ρ,θ,φ) = γ_{mn} z_n(ρ) C_{mn}(θ,φ)
-# Magnetic multipole (TE) — no radial component (Sun Eq. 3.2.46)
+"""
+    vswf_M(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool=true)
+
+Vector spherical wave function ``M_{mn}(\\rho, \\theta, \\phi)`` — magnetic multipole (TE).
+
+```
+M_{mn}(\\rho, \\theta, \\phi) = \\gamma_{mn} \\cdot z_n(\\rho) \\cdot C_{mn}(\\theta, \\phi)
+```
+
+Has no radial component. `regular=true` uses ``j_n(kr)`` (regular at origin);
+`regular=false` uses ``h_n^{(1)}(kr)`` (outgoing wave).
+
+# Arguments
+- `n::Int`: Multipole order (must be ≥ 1)
+- `m::Int`: Azimuthal mode number
+- `kr::Real`: Dimensionless radial coordinate ``\\rho = kr``
+- `theta::Real`: Polar angle
+- `phi::Real`: Azimuthal angle
+- `regular::Bool=true`: Use regular (`j_n`) or outgoing (`h_n^{(1)}`) radial function
+
+# Returns
+`SVector{3, Complex}`: M-mode VSWF in spherical components `(r̂, θ̂, φ̂)`
+
+# References
+- Sun et al. 2020, Eq. 3.2.46
+"""
 function vswf_M(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool = true)
     n >= 1 || throw(ArgumentError("vswf_M requires n >= 1, got n=$n"))
     g = gamma_vsh(n, m)
@@ -16,8 +40,33 @@ function vswf_M(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool 
     return g * zn * C_vsh(n, m, theta, phi)
 end
 
-# N_{mn}(ρ,θ,φ) = γ_{mn} { r̂ n(n+1)/ρ · z_n(ρ) P_{mn} + B_{mn} [ρz_n]'/ρ }
-# Electric multipole (TM) — all three components (Sun Eq. 3.2.46)
+"""
+    vswf_N(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool=true)
+
+Vector spherical wave function ``N_{mn}(\\rho, \\theta, \\phi)`` — electric multipole (TM).
+
+```
+N_{mn} = \\gamma_{mn} \\{ \\hat{r} \\frac{n(n+1)}{\\rho} z_n(\\rho) P_{mn}(\\theta, \\phi)
+         + B_{mn}(\\theta, \\phi) \\cdot \\frac{[\\rho z_n(\\rho)]'}{\\rho} \\}
+```
+
+Has all three spherical components. `regular=true` uses ``j_n(kr)``;
+`regular=false` uses ``h_n^{(1)}(kr)``.
+
+# Arguments
+- `n::Int`: Multipole order (must be ≥ 1)
+- `m::Int`: Azimuthal mode number
+- `kr::Real`: Dimensionless radial coordinate ``\\rho = kr``
+- `theta::Real`: Polar angle
+- `phi::Real`: Azimuthal angle
+- `regular::Bool=true`: Use regular or outgoing radial function
+
+# Returns
+`SVector{3, Complex}`: N-mode VSWF in spherical components `(r̂, θ̂, φ̂)`
+
+# References
+- Sun et al. 2020, Eq. 3.2.46
+"""
 function vswf_N(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool = true)
     n >= 1 || throw(ArgumentError("vswf_N requires n >= 1, got n=$n"))
     g = gamma_vsh(n, m)
@@ -32,8 +81,30 @@ function vswf_N(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool 
     return SVector{3, T}(r_comp, tang[2], tang[3])
 end
 
-# L_{mn}(ρ,θ,φ) — longitudinal VSWF for plane wave expansion
-# L = (1/k)∇[z_n(kr) Y_{mn}] with γ'_{mn} normalization (Sun Eq. 3.2.50)
+"""
+    vswf_L(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool=true)
+
+Longitudinal vector spherical wave function ``L_{mn}(\\rho, \\theta, \\phi)``.
+
+Used for plane wave expansion. Uses ``\\gamma'_{mn}`` normalization instead of ``\\gamma_{mn}``:
+```
+L_{mn} = \\frac{1}{k} \\nabla [z_n(kr) Y_{mn}(\\theta, \\phi)]
+```
+
+# Arguments
+- `n::Int`: Multipole order (must be ≥ 1)
+- `m::Int`: Azimuthal mode number
+- `kr::Real`: Dimensionless radial coordinate ``\\rho = kr``
+- `theta::Real`: Polar angle
+- `phi::Real`: Azimuthal angle
+- `regular::Bool=true`: Use regular or outgoing radial function
+
+# Returns
+`SVector{3, Complex}`: L-mode VSWF in spherical components `(r̂, θ̂, φ̂)`
+
+# References
+- Sun et al. 2020, Eq. 3.2.50
+"""
 function vswf_L(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool = true)
     n >= 1 || throw(ArgumentError("vswf_L requires n >= 1, got n=$n"))
     gp = gamma_prime(n, m)
