@@ -7,7 +7,8 @@ using FastGaussQuadrature: gausslegendre
 
     # Surface area = 4πa² via quadrature
     xg, wg = gausslegendre(60)
-    area = sum(wg .* [(pi / 2) * TMatrix.surface_element(s, (pi / 2) * (xi + 1)) * 2pi for xi in xg])
+    area = sum(wg .* [(pi / 2) * TMatrix.surface_element(s, (pi / 2) * (xi + 1)) * 2pi
+                for xi in xg])
     @test area ≈ 4pi rtol=1e-10
 
     @test TMatrix.surface_normal(s, 1.0)[1] > 0
@@ -21,7 +22,8 @@ end
     # a=b sphere case: area = 4πa²
     sp_s = TMatrix.Spheroid(1.0, 1.0)
     xg, wg = gausslegendre(60)
-    area = sum(wg .* [(pi / 2) * TMatrix.surface_element(sp_s, (pi / 2) * (xi + 1)) * 2pi for xi in xg])
+    area = sum(wg .* [(pi / 2) * TMatrix.surface_element(sp_s, (pi / 2) * (xi + 1)) * 2pi
+                for xi in xg])
     @test area ≈ 4pi rtol=1e-8
 end
 

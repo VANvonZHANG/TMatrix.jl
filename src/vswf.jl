@@ -2,14 +2,14 @@
 # (Sun §3.2, Eqs. 3.2.46–3.2.51)
 
 # Select radial function: j_n for regular, h_n^(1) for outgoing
-function _radial_func(n::Int, rho::Real; regular::Bool=true)
+function _radial_func(n::Int, rho::Real; regular::Bool = true)
     regular && return sphericalbesselj(n, rho)
     return shankelh1(n, rho)
 end
 
 # M_{mn}(ρ,θ,φ) = γ_{mn} z_n(ρ) C_{mn}(θ,φ)
 # Magnetic multipole (TE) — no radial component (Sun Eq. 3.2.46)
-function vswf_M(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool=true)
+function vswf_M(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool = true)
     n >= 1 || throw(ArgumentError("vswf_M requires n >= 1, got n=$n"))
     g = gamma_vsh(n, m)
     zn = _radial_func(n, kr; regular)
@@ -18,7 +18,7 @@ end
 
 # N_{mn}(ρ,θ,φ) = γ_{mn} { r̂ n(n+1)/ρ · z_n(ρ) P_{mn} + B_{mn} [ρz_n]'/ρ }
 # Electric multipole (TM) — all three components (Sun Eq. 3.2.46)
-function vswf_N(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool=true)
+function vswf_N(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool = true)
     n >= 1 || throw(ArgumentError("vswf_N requires n >= 1, got n=$n"))
     g = gamma_vsh(n, m)
     zn = _radial_func(n, kr; regular)
@@ -34,7 +34,7 @@ end
 
 # L_{mn}(ρ,θ,φ) — longitudinal VSWF for plane wave expansion
 # L = (1/k)∇[z_n(kr) Y_{mn}] with γ'_{mn} normalization (Sun Eq. 3.2.50)
-function vswf_L(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool=true)
+function vswf_L(n::Int, m::Int, kr::Real, theta::Real, phi::Real; regular::Bool = true)
     n >= 1 || throw(ArgumentError("vswf_L requires n >= 1, got n=$n"))
     gp = gamma_prime(n, m)
     zn = _radial_func(n, kr; regular)

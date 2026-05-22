@@ -15,7 +15,7 @@ using LinearAlgebra
     @test abs(b[1]) < abs(a1_expected) * 1e-2  # b_1 is O(x⁵)
 
     # Energy conservation for real m: Q_abs ≈ 0, Q_ext ≈ Q_sca
-    T = solve_tmatrix(Sphere(1.0), MieMethod(), 0.5, 1.5 + 0.0im; N_max=20)
+    T = solve_tmatrix(Sphere(1.0), MieMethod(), 0.5, 1.5 + 0.0im; N_max = 20)
     C = calc_cross_sections(T)
     @test C.Q_abs ≈ 0.0 atol=1e-12
     @test C.Q_ext ≈ C.Q_sca rtol=1e-12
@@ -71,7 +71,7 @@ end
 end
 
 @testset "Diagonal Conversion" begin
-    T = solve_tmatrix(Sphere(0.5), MieMethod(), 0.532, 1.5 + 0.01im; N_max=5)
+    T = solve_tmatrix(Sphere(0.5), MieMethod(), 0.532, 1.5 + 0.01im; N_max = 5)
     D = Diagonal(T)
     @test D isa LinearAlgebra.Diagonal
     N_total = 2 * 5 * (5 + 2)  # 2 * N_max * (N_max + 2)

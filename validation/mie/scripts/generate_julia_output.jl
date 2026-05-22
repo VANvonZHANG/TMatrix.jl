@@ -12,10 +12,11 @@ using CSV
 using DataFrames
 using TMatrix
 
-function main(args::Vector{String}=ARGS)
+function main(args::Vector{String} = ARGS)
     base_dir = dirname(dirname(@__FILE__))
     input_csv = length(args) >= 1 ? args[1] : joinpath(base_dir, "inputs", "test_cases.csv")
-    output_csv = length(args) >= 2 ? args[2] : joinpath(base_dir, "outputs", "julia_results.csv")
+    output_csv = length(args) >= 2 ? args[2] :
+                 joinpath(base_dir, "outputs", "julia_results.csv")
 
     if !isfile(input_csv)
         error("Input file not found: $input_csv")
@@ -36,7 +37,7 @@ function main(args::Vector{String}=ARGS)
         g = Float64[],
         Cext = Float64[],
         Csca = Float64[],
-        Cabs = Float64[],
+        Cabs = Float64[]
     )
 
     for row in eachrow(df)
@@ -48,20 +49,21 @@ function main(args::Vector{String}=ARGS)
         T = solve_tmatrix(Sphere(r), MieMethod(), λ, m)
         C = calc_cross_sections(T)
 
-        push!(results, (
-            name,
-            row.m_real,
-            row.m_imag,
-            row.wavelength_nm,
-            row.diameter_nm,
-            C.Q_ext,
-            C.Q_sca,
-            C.Q_abs,
-            C.asymmetry,
-            C.extinction * 1e18,
-            C.scattering * 1e18,
-            C.absorption * 1e18,
-        ))
+        push!(results,
+            (
+                name,
+                row.m_real,
+                row.m_imag,
+                row.wavelength_nm,
+                row.diameter_nm,
+                C.Q_ext,
+                C.Q_sca,
+                C.Q_abs,
+                C.asymmetry,
+                C.extinction * 1e18,
+                C.scattering * 1e18,
+                C.absorption * 1e18
+            ))
     end
 
     CSV.write(output_csv, results)

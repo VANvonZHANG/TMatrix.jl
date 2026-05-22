@@ -129,19 +129,19 @@ function mie_ab(N_max::Int, x::Real, m::Complex)
 
     for n in 1:N_max
         # Riccati-Bessel functions of first kind (ζ)
-        zeta_x  = x  * sphericalbesselj(n, x)
+        zeta_x = x * sphericalbesselj(n, x)
         zeta_mx = mx * sphericalbesselj(n, mx)
 
         # Riccati-Bessel functions of third kind (ξ)
         # Sun Eq. 3.3.40a: ξ_n(x) = x·h_n^(1)(x)
-        xi_x  = x  * shankelh1(n, x)
+        xi_x = x * shankelh1(n, x)
         xi_mx = mx * shankelh1(n, mx)
 
         # Derivatives of Riccati-Bessel functions
-        zeta_prime_x  = sphericalbesselj(n, x)  + x  * sbesselj_deriv(n, x)
+        zeta_prime_x = sphericalbesselj(n, x) + x * sbesselj_deriv(n, x)
         zeta_prime_mx = sphericalbesselj(n, mx) + mx * sbesselj_deriv(n, mx)
 
-        xi_prime_x  = shankelh1(n, x)  + x  * shankelh1_deriv(n, x)
+        xi_prime_x = shankelh1(n, x) + x * shankelh1_deriv(n, x)
         xi_prime_mx = shankelh1(n, mx) + mx * shankelh1_deriv(n, mx)
 
         # Sun Eq. 3.3.41 — b_n
@@ -190,15 +190,17 @@ Compute the Lorenz-Mie T-matrix for a sphere.
 - `N_max >= 1`
 """
 function solve_tmatrix(
-    sphere::Sphere,
-    ::MieMethod,
-    wavelength::Real,
-    refractive_index::Complex;
-    N_max::Int = mie_nmax(2π / wavelength * sphere.radius)
+        sphere::Sphere,
+        ::MieMethod,
+        wavelength::Real,
+        refractive_index::Complex;
+        N_max::Int = mie_nmax(2π / wavelength * sphere.radius)
 )
-    sphere.radius > 0 || throw(ArgumentError("sphere radius must be positive, got $(sphere.radius)"))
+    sphere.radius > 0 ||
+        throw(ArgumentError("sphere radius must be positive, got $(sphere.radius)"))
     wavelength > 0 || throw(ArgumentError("wavelength must be positive, got $wavelength"))
-    imag(refractive_index) >= 0 || throw(ArgumentError("imag(refractive_index) must be >= 0 for a passive medium, got $(imag(refractive_index))"))
+    imag(refractive_index) >= 0 ||
+        throw(ArgumentError("imag(refractive_index) must be >= 0 for a passive medium, got $(imag(refractive_index))"))
     N_max >= 1 || throw(ArgumentError("N_max must be >= 1, got $N_max"))
 
     k = 2π / wavelength
@@ -265,7 +267,7 @@ function calc_cross_sections(T::MieTMatrix)
     # Asymmetry parameter g  (Bohren & Huffman, Eq. 4.67)
     g = 0.0
     for n in 1:(N_max - 1)
-        g += (n * (n + 2) / (n + 1)) * real(a[n] * conj(a[n+1]) + b[n] * conj(b[n+1]))
+        g += (n * (n + 2) / (n + 1)) * real(a[n] * conj(a[n + 1]) + b[n] * conj(b[n + 1]))
     end
     for n in 1:N_max
         g += ((2n + 1) / (n * (n + 1))) * real(a[n] * conj(b[n]))
